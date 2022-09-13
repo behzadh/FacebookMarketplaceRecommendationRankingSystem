@@ -1,0 +1,14 @@
+[KEY]
+# S3 keys
+AWSAccessKeyId=
+AWSSecretKey=
+AWSBucketName=
+
+# RDS keys
+DATABASE_TYPE=
+DBAPI=
+ENDPOINT= 
+USER='postges'
+PASSWORD=
+PORT=5432
+DATABASE=postgres
