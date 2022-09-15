@@ -4,11 +4,7 @@ Cleaning the tabular dataset.
 @date:      10 September 2022
 '''
 import pandas as pd
-import numpy as np
-import plotly.express as px
-import missingno as msno
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.preprocessing import OneHotEncoder
+import re
 
 pd.set_option('display.max_columns', None)
 class CleanData:
@@ -30,7 +26,8 @@ class CleanData:
         DataFrame
             A pre cleaned DataFrame
         '''
-        df = pd.read_csv("/Users/behzad/AiCore/Facebook_Marketplace_RRS/raw_data/products.csv", lineterminator="\n")
+        self.path = "/Users/behzad/AiCore/Facebook_Marketplace_RRS/raw_data/"
+        df = pd.read_csv(self.path + "products.csv", lineterminator="\n")
         df = df.drop(df.columns[[0]], axis=1)
         df['price'] = df['price'].str.replace('£', '')
         df['price'] = pd.to_numeric(df['price'], errors='coerce')
@@ -52,16 +49,13 @@ class CleanData:
         df_ctg = df_tmp_ctg.filter(['category_edited', 'category_description_edited'])
         df_tmp = pd.concat([df_tmp_name, df_ctg], axis=1)
         df_clean = df_tmp.filter(['id', 'product_name_edited', 'category_edited', 'category_description_edited', 'product_description', 'price', 'location'])
+        df_clean['product_name_edited'] = df_clean['product_name_edited'].str.replace('[^a-zA-Z]', ' ')
+        df_clean['category_edited'] = df_clean['category_edited'].str.replace('[^a-zA-Z]', ' ')
+        df_clean['category_description_edited'] = df_clean['category_description_edited'].str.replace('[^a-zA-Z]', ' ')
+        df_clean['product_description'] = df_clean['product_description'].str.replace('[^a-zA-Z]', ' ')
+        df_clean['location'] = df_clean['location'].str.replace('[^a-zA-Z]', ' ')
+        df_clean.to_csv(self.path + 'products_clean.csv', index = None, header=True)
         print(df_clean.head(10))
-
-    def text_to_numerical(self, column: str):
-        vect = CountVectorizer()
-        text = self.df[column].to_list()
-        vect.fit(text)
-        train = vect.transform(text)
-        train.toarray()
-        data = pd.DataFrame(train.toarray(), columns=vect.get_feature_names())
-        return data
 
 if __name__ == '__main__':
     cln = CleanData() 

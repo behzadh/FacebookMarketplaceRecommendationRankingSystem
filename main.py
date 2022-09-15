@@ -1,5 +1,6 @@
-from utils.clean_tabular_data import CleanData
+from utils.fbm_rrs import FbMarketingData
 
 if __name__ == '__main__':
-    cln = CleanData() 
-    cln.clean_text_data()
+    cls = FbMarketingData() 
+    cls.main()
+    
