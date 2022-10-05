@@ -36,7 +36,7 @@ class CleanData:
         #print(df_pre_clean.head(10))
         return df_pre_clean
 
-    def clean_text_data(self):
+    def clean_text_data(self, csv_save: bool = False, pkl_save: bool = False):
 
         '''
         Cleans data by removing not usful data from each column
@@ -50,13 +50,24 @@ class CleanData:
         df_tmp = pd.concat([df_tmp_name, df_ctg], axis=1)
         df_clean = df_tmp.filter(['id', 'product_name_edited', 'category_edited', 'category_description_edited', 'product_description', 'price', 'location'])
         df_clean['product_name_edited'] = df_clean['product_name_edited'].str.replace('[^a-zA-Z]', ' ')
-        df_clean['category_edited'] = df_clean['category_edited'].str.replace('[^a-zA-Z]', ' ')
+        # df_clean['category_edited'] = df_clean['category_edited'].str.replace('[^a-zA-Z]', ' ')
         df_clean['category_description_edited'] = df_clean['category_description_edited'].str.replace('[^a-zA-Z]', ' ')
         df_clean['product_description'] = df_clean['product_description'].str.replace('[^a-zA-Z]', ' ')
         df_clean['location'] = df_clean['location'].str.replace('[^a-zA-Z]', ' ')
-        df_clean.to_csv(self.path + 'products_clean.csv', index = None, header=True)
-        print(df_clean.head(10))
+        if csv_save:
+            df_clean.to_csv(self.path + 'products_clean.csv', index = None, header=True)
+        #print(df_clean.head(10))
+
+        df_img = pd.read_csv(self.path + "Images.csv")
+        df_merge = pd.merge(df_clean, df_img[['product_id', 'id']], left_on='id', right_on='product_id').copy()
+        df_merge = df_merge.drop(df_merge.columns[[0,7]], axis=1)
+        df_merge = df_merge.rename(columns={'id_y':'id'})
+        if pkl_save:
+           df_merge.to_csv(self.path + 'products_image_merged.csv', index = None, header=True)
+        #print(df_merge.tail())
+        return df_merge
 
 if __name__ == '__main__':
     cln = CleanData() 
-    cln.clean_text_data()
+    #cln.clean_text_data(True)
+    cln.clean_text_data(True, True)

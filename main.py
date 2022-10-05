@@ -1,6 +1,10 @@
-from utils.fbm_rrs import FbMarketingData
+from utils.fbm_rrs import FbMarketing
+from utils.price_prediction_lr import FbMarketingPricePrediction
 
 if __name__ == '__main__':
-    cls = FbMarketingData() 
+    lr_cls = FbMarketingPricePrediction() 
+    #lr_cls.main()
+
+    cls = FbMarketing() 
     cls.main()
     
