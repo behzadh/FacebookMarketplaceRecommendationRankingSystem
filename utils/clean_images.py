@@ -20,7 +20,8 @@ class CleanImage(CleanData):
     '''
     def __init__(self) -> None:
         self.dir = '/Users/behzad/AiCore/fb_raw_data/'
-
+        self.final_size = 64
+        
     def resize_image(self, final_size, im):
         
         '''
@@ -41,12 +42,11 @@ class CleanImage(CleanData):
         '''
         path = self.dir + "images/"
         dirs = os.listdir(path)
-        final_size = 64
         for n, item in enumerate(dirs, 1):
             im = Image.open(path + item)
             # width, height = im.size
             # print(width, height)
-            new_im = self.resize_image(final_size, im)
+            new_im = self.resize_image(self.final_size, im)
             new_im.save(self.dir + f'cleaned_images/{item[:-4]}_resized.jpg')
 
     def image_to_array(self):
@@ -60,8 +60,8 @@ class CleanImage(CleanData):
         img_df = pd.DataFrame()
         for id in profuct_id_list:
             im = Image.open(path + id + '_resized.jpg')
-            img = np.mean(im, axis=2) # convert color image to gray
-            im_array = asarray(img)
+            #img = np.mean(im, axis=2) # convert color image to gray
+            im_array = asarray(im)
             img_df = img_df.append({"image": [im_array], 'id': id}, ignore_index=True)
         df_final = pd.merge(df, img_df)
         df_final.to_pickle('./raw_data/products_w_imgs.pkl')
