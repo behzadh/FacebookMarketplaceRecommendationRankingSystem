@@ -10,7 +10,7 @@ from torch.utils.tensorboard import SummaryWriter
 from sklearn.metrics import accuracy_score, confusion_matrix
 
 batch_size = 4
-n_epochs = 2
+n_epochs = 3
 lr = 0.001
 num_classes = 13
 
@@ -167,7 +167,7 @@ def main ():
     for epoch in range(n_epochs):
         train_loss = train(model, device, train_loader, optimizer, epoch)
         test_loss = test(model, device, test_loader)
-        epoch_nums.append(epoch)
+        epoch_nums.append(epoch + 1)
         training_loss.append(train_loss)
         validation_loss.append(test_loss)
     return epoch_nums, training_loss, validation_loss
