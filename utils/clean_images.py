@@ -5,7 +5,6 @@ Cleaning an image dataset.
 '''
 from numpy import asarray
 from PIL import Image
-import numpy as np
 import pandas as pd
 import os
 from clean_tabular_data import CleanData
