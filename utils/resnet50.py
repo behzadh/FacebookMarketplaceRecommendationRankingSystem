@@ -1,10 +1,7 @@
-
-
+import os
 from pytorch_dataset import ProductDataset, LoadTrainTestPlot
 import torch
 import torch.nn as nn
-from torch.utils.tensorboard import SummaryWriter
-from sklearn.metrics import accuracy_score, confusion_matrix
 import pickle
 
 class ResNet50(nn.Module):
@@ -25,7 +22,7 @@ class ResNet50(nn.Module):
         return self.layers(x)
 
 batch_size = 4
-n_epochs = 2
+n_epochs = 3
 lr = 0.001
 num_classes = 13
 
@@ -45,8 +42,8 @@ def main ():
     epoch_nums = []
     training_loss = []
     validation_loss = []
-
-    #writer = SummaryWriter()
+    if not os.path.exists('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/weights'): os.makedirs('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/weights')
+    if not os.path.exists(f'/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/weights/{type(model).__name__}'): os.makedirs(f'/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/weights/{type(model).__name__}')
 
     for epoch in range(n_epochs):
         train_loss = load_train.train(model, device, train_loader, optimizer, epoch, loss_criteria)
@@ -54,11 +51,12 @@ def main ():
         epoch_nums.append(epoch + 1)
         training_loss.append(train_loss)
         validation_loss.append(test_loss)
+       # torch.save(model.state_dict(), f'./ml_models/weights/{type(model).__name__}/resnet50_{epoch+1}.pt')
     return epoch_nums, training_loss, validation_loss
 
 if __name__ == "__main__":
     epoch_nums, training_loss, validation_loss = main()
-    torch.save(model.state_dict(), './raw_data/resnet50.pt')
-    with open('./raw_data/image_decoder.pkl', 'wb') as f:
+    torch.save(model.state_dict(), './ml_models/resnet50.pt')
+    with open('./ml_models/image_decoder.pkl', 'wb') as f:
         pickle.dump(dataset.decoder, f)
     load_train.plot_acc(epoch_nums, training_loss, validation_loss, dataset, model, test_loader)

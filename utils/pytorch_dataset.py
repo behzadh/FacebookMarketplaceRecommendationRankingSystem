@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from PIL import Image
 from sklearn.metrics import accuracy_score, confusion_matrix
+from torch.utils.tensorboard import SummaryWriter
 
 print("Libraries imported - ready to use PyTorch", torch.__version__)
 
@@ -16,7 +17,7 @@ class ProductDataset(torch.utils.data.Dataset):
     '''
     def __init__(self) -> None:
         super().__init__()
-        self.path = '/Users/behzad/AiCore/Facebook_Marketplace_RRS/raw_data/'
+        self.path = '/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/'
         self.test_to_train_ratio = 0.3
         self.seed = 37
 
@@ -29,11 +30,12 @@ class ProductDataset(torch.utils.data.Dataset):
         self.encoder = {y: x for (x, y) in enumerate(set(self.labels))}
         self.decoder = {x: y for (x, y) in enumerate(set(self.labels))}
         self.transform = transforms.Compose([
+            transforms.Resize(64),
             transforms.CenterCrop(64),
             transforms.RandomHorizontalFlip(p=0.3),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                std=[0.229, 0.224, 0.225]) # is this right?
+                                std=[0.229, 0.224, 0.225]) 
         ])
 
     def __getitem__(self,index):
@@ -52,6 +54,12 @@ class LoadTrainTestPlot():
     '''
     A class to build a torch dataset
     '''
+    def __init__(self) -> None:
+        self.writer = SummaryWriter()
+        self.batch_reset_train = 0
+        self.batch_reset_test = 0
+        self.accuracy_list = []
+        
     def load_datasets(self, dataset):
 
         '''
@@ -99,6 +107,8 @@ class LoadTrainTestPlot():
             loss.backward()
             optimizer.step()
             #print('\tTraining batch {} Loss: {:.6f}'.format(batch_idx + 1, loss.item()))
+            self.writer.add_scalar('Training Loss', loss.item(), self.batch_reset_train)
+            self.batch_reset_train += 1
 
         avg_loss = train_loss / (batch_idx+1)
         print('Training set: Average loss: {:.6f}'.format(avg_loss))
@@ -112,19 +122,23 @@ class LoadTrainTestPlot():
         with torch.no_grad():
             batch_count = 0
             for data, target in test_loader:
-                batch_count += 1
                 data, target = data.to(device), target.to(device)
 
                 output = model(data)
-                test_loss += loss_criteria(output, target).item()          
+                loss = loss_criteria(output, target)
+                test_loss += loss.item()          
                 # Calculate the accuracy for this batch
                 _, predicted = torch.max(output.data, 1)
                 correct += torch.sum(target==predicted).item()
+                self.writer.add_scalar('Validation Loss', loss.item(), self.batch_reset_test)
+                batch_count += 1
+                self.batch_reset_test += 1
 
         avg_loss = test_loss / batch_count
+        test_accuracy = 100. * correct / len(test_loader.dataset)
+        self.accuracy_list.append(test_accuracy)
         print('Validation set: Average loss: {:.6f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-            avg_loss, correct, len(test_loader.dataset),
-            100. * correct / len(test_loader.dataset)))
+            avg_loss, correct, len(test_loader.dataset), test_accuracy))
         return avg_loss
 
     def plot_acc(self, epoch_nums, training_loss, validation_loss, dataset, model, test_loader):
