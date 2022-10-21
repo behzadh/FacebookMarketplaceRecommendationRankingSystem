@@ -145,4 +145,75 @@ Creating a pipline as above will increase the accuracy to 49%.
     ```
     This model only produces an accuracy of ~13% which will be drastically increased with the usage of a CNN model.
 
+## Creating Vision Model
+
+> In this section we will train a PyTorch CNN model to classify the category of products based on their images.
+
+- PyTorch Dataset:
+    - To create a PyTorch dataset we can simply use the 'torch.utils.data.Dataset' module. The idea is to create a PyTorch dataset 
+    which includs an image tensor as features and the category of products as target.
+
+- Build Convolutional Neural Network:
+    - A CNN model with two hidden layers designed for the image classification. 
     
+    ```python
+    class CNN(nn.Module):
+
+        '''
+        A two layers cnn model used for image classification 
+        '''
+
+        def __init__(self, num_classes=3) -> None:
+
+            super().__init__()
+            self.layers = nn.Sequential(
+                nn.Conv2d(3, 12, kernel_size = 3, stride = 1, padding = 1),
+                nn.ReLU(),
+                nn.MaxPool2d(2,2),
+                nn.Conv2d(12,24, kernel_size = 3, stride = 1, padding = 1),
+                nn.ReLU(),
+                nn.MaxPool2d(2,2),
+                nn.Dropout2d(p=0.2),
+            
+                nn.Flatten(),
+                nn.Linear(6144, num_classes), #28800
+            )
+
+        def forward(self, x):
+            return self.layers(x)
+    ```
+    This model has reached an accurancy of 23-24% which is an excepted accurancy based on our dataset. It's around twice better 
+    than the previous model.
+
+- Transfer Learning:
+    - Can we even do better? Can we use more pictures to improve the accurancy? Where can find the new pictures? The answer
+    of these questions is 'yes' we can use pre-trained models that's been trained by others off the shelf. In this project, 
+    we use transfer learning to fine tune RESNET-50 to model a CNN that can classify the images using the dataset created 
+    previousely.
+    We just need to replace the final linear layer of the model with another linear layer whose output size is the same as 
+    the number of our categories.
+    ```python
+    class ResNet50(nn.Module):
+
+        '''
+        ResNet50 class is a pre-trained model tuned for our image classification 
+        '''
+
+        def __init__(self, num_classes=3) -> None:
+
+            super().__init__()
+            self.resnet50 = torch.hub.load('NVIDIA/DeepLearningExamples:torchhub', 'nvidia_resnet50', pretrained=True)
+            out_features = self.resnet50.fc.out_features #It'd be 2048 for resnet50
+            self.linear = nn.Linear(out_features, num_classes).to(device)
+            self.layers = nn.Sequential(self.resnet50, self.linear).to(device)
+
+        def forward(self, x):
+            return self.layers(x)
+    ```
+    Using pre-trained resnet50 model increased the accuracy to around 35%.
+
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/plots/tensorboard.png" width="600">
+    <br />
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/plots/loss.png" width="298">
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/plots/accuracy.png" width="300">
+

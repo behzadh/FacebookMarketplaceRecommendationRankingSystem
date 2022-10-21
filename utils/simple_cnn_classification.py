@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 class CNN(nn.Module):
 
     '''
-    A 2 layer cnn model used for image classification 
+    A two layers cnn model used for image classification 
     '''
 
     def __init__(self, num_classes=3) -> None:

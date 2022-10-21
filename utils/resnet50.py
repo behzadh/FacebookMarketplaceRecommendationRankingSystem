@@ -7,7 +7,7 @@ import pickle
 class ResNet50(nn.Module):
 
     '''
-    A 2 layer cnn model used for image classification 
+    ResNet50 class is a pre-trained model tuned for our image classification  
     '''
 
     def __init__(self, num_classes=3) -> None:

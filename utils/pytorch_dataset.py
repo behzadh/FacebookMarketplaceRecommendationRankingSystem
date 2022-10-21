@@ -52,13 +52,17 @@ class ProductDataset(torch.utils.data.Dataset):
 class LoadTrainTestPlot():
 
     '''
-    A class to build a torch dataset
+    This class will take care of loading train and test datasets and has the following models:
+
+    load_datasets(self, dataset)
+    train(self, model, device, train_loader, optimizer, epoch, loss_criteria)
+    test(self, model, device, test_loader, loss_criteria)
+    plot_acc(self, epoch_nums, training_loss, validation_loss, dataset, model, test_loader)
     '''
     def __init__(self) -> None:
         self.writer = SummaryWriter()
         self.batch_reset_train = 0
         self.batch_reset_test = 0
-        self.accuracy_list = []
         
     def load_datasets(self, dataset):
 
@@ -91,6 +95,9 @@ class LoadTrainTestPlot():
 
     def train(self, model, device, train_loader, optimizer, epoch, loss_criteria):
         
+        '''
+        Calculates the avrage loss for the training set 
+        '''
         model.train() # Set the model to training mode
         train_loss = 0
         print("Epoch:", epoch + 1)
@@ -116,6 +123,9 @@ class LoadTrainTestPlot():
 
     def test(self, model, device, test_loader, loss_criteria):
         
+        '''
+        Calculates the avrage loss and accurancy for the testing set 
+        '''
         model.eval() # Switch the model to evaluation mode (so we don't backpropagate or drop)
         test_loss = 0
         correct = 0
@@ -125,24 +135,26 @@ class LoadTrainTestPlot():
                 data, target = data.to(device), target.to(device)
 
                 output = model(data)
-                loss = loss_criteria(output, target)
-                test_loss += loss.item()          
+                loss_val = loss_criteria(output, target)
+                test_loss += loss_val.item()          
                 # Calculate the accuracy for this batch
                 _, predicted = torch.max(output.data, 1)
                 correct += torch.sum(target==predicted).item()
-                self.writer.add_scalar('Validation Loss', loss.item(), self.batch_reset_test)
+                self.writer.add_scalar('Validation Loss', loss_val.item(), self.batch_reset_test)
                 batch_count += 1
                 self.batch_reset_test += 1
 
         avg_loss = test_loss / batch_count
         test_accuracy = 100. * correct / len(test_loader.dataset)
-        self.accuracy_list.append(test_accuracy)
         print('Validation set: Average loss: {:.6f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
             avg_loss, correct, len(test_loader.dataset), test_accuracy))
         return avg_loss
 
     def plot_acc(self, epoch_nums, training_loss, validation_loss, dataset, model, test_loader):
 
+        '''
+        Plots loss per epochs and predictios from the test
+        '''
         plt.figure(figsize=(7,7))
         plt.plot(epoch_nums, training_loss)
         plt.plot(epoch_nums, validation_loss)
