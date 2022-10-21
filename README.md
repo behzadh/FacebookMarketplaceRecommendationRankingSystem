@@ -212,8 +212,8 @@ Creating a pipline as above will increase the accuracy to 49%.
     ```
     Using pre-trained resnet50 model increased the accuracy to around 35%.
 
-    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/plots/tensorboard.png" width="600">
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/tensorboard.png" width="600">
     <br />
-    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/plots/loss.png" width="298">
-    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/plots/accuracy.png" width="300">
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/loss.png" width="298">
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/accuracy.png" width="300">
 
