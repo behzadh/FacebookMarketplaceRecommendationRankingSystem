@@ -210,10 +210,62 @@ Creating a pipline as above will increase the accuracy to 49%.
         def forward(self, x):
             return self.layers(x)
     ```
-    Using pre-trained resnet50 model increased the accuracy to around 35%.
+    Using pre-trained resnet50 model increased the accuracy to around 35% for the validation and the accuracy for the training 
+    sample reached 65% accepting an overfit for our model, based on the available data for this project.
 
-    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/tensorboard.png" width="600">
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/image_tensorboard.png" width="600">
     <br />
-    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/loss.png" width="298">
-    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/accuracy.png" width="300">
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/image_loss.png" width="298">
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/image_accuracy.png" width="300">
+
+## Creating Text Model
+
+> In this section we will train a PyTorch CNN model to classify the category of products based on their text discription.
+
+- PyTorch Dataset:
+    - Same as the Image Dataset we use the 'torch.utils.data.Dataset' module. This PyTorch dataset 
+    will includ an embanding tensor as features and the category of products as target.
+
+    - Before embedding the raw text data is cleaned to drop unnecessary information for the training model.
+
+- Build Convolutional Neural Network:
+    - In this stage our dataset is very similar to the image dataset. We just need to use a 1d (Conv1d) CNN model 
+    instead of a 2d (Conv2d) model that we used for the image classification. 
+    
+    ```python
+    class CNN(nn.Module):
+
+        '''
+        A cnn model used for text classification 
+        '''
+
+        def __init__(self, num_classes=3) -> None:
+
+            super().__init__()
+            self.layers = nn.Sequential(
+                nn.Conv1d(768, 256, kernel_size=3, stride=1, padding=1),
+                nn.ReLU(),
+                nn.MaxPool1d(kernel_size=2, stride=2),
+                nn.Conv1d(256, 128, kernel_size=3, stride=1, padding=1),
+                nn.ReLU(),
+                nn.MaxPool1d(kernel_size=2, stride=2),
+                nn.Conv1d(128, 64, kernel_size=3, stride=1, padding=1),
+                nn.ReLU(),
+                nn.MaxPool1d(kernel_size=2, stride=2),
+                nn.Conv1d(64, 32, kernel_size=3, stride=1, padding=1),
+                nn.ReLU(),
+                nn.Flatten(),
+                nn.Linear(64, num_classes)
+            )
+
+        def forward(self, x):
+            return self.layers(x)
+    ```
+    This model has reached an accurancy of 77% which is a very good result for this dataset. the accuracy for the training 
+    sample reached 84%% and no overfitting occured for our text calssification within the 5 epochs.
+
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_tensorboard.png" width="600">
+    <br />
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_loss.png" width="298">
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_accuracy.png" width="300">
 
