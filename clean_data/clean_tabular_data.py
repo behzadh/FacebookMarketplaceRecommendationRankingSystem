@@ -26,8 +26,8 @@ class CleanData:
         DataFrame
             A pre cleaned DataFrame
         '''
-        self.path = "/Users/behzad/AiCore/Facebook_Marketplace_RRS/raw_data/"
-        df = pd.read_csv(self.path + "products.csv", lineterminator="\n")
+        self.path = "/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/"
+        df = pd.read_csv(self.path + "Products.csv", lineterminator="\n")
         df = df.drop(df.columns[[0]], axis=1)
         df['price'] = df['price'].str.replace('£', '')
         df['price'] = pd.to_numeric(df['price'], errors='coerce')
@@ -53,6 +53,7 @@ class CleanData:
         # df_clean['category_edited'] = df_clean['category_edited'].str.replace('[^a-zA-Z]', ' ')
         df_clean['category_description_edited'] = df_clean['category_description_edited'].str.replace('[^a-zA-Z]', ' ')
         df_clean['product_description'] = df_clean['product_description'].str.replace('[^a-zA-Z]', ' ')
+        df_clean['product_description'] = df_clean['product_description'].map(lambda x: ' '.join(word for word in x.split() if len(word)>1))
         df_clean['location'] = df_clean['location'].str.replace('[^a-zA-Z]', ' ')
         if csv_save:
             df_clean.to_csv(self.path + 'products_clean.csv', index = None, header=True)

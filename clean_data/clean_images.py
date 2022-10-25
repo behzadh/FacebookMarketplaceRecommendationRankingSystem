@@ -63,7 +63,7 @@ class CleanImage(CleanData):
             im_array = asarray(im)
             img_df = img_df.append({"image": [im_array], 'id': id}, ignore_index=True)
         df_final = pd.merge(df, img_df)
-        df_final.to_pickle('./raw_data/products_w_imgs.pkl')
+        df_final.to_pickle('./ml_models/products_w_imgs.pkl')
 
 if __name__ == '__main__':
     cln_img = CleanImage()
