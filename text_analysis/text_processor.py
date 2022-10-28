@@ -1,6 +1,7 @@
 from transformers import BertTokenizer
 from transformers import BertModel
 import torch
+import re
 
 class TextProcessor:
     def __init__(self, max_length: int):
@@ -10,14 +11,16 @@ class TextProcessor:
         self.max_length = max_length
 
     def __call__(self, text):
+        text = re.sub('[^a-zA-Z]+', ' ', text)
+        text = ' '.join(word for word in text.split() if len(word)>1)
         encoded = self.tokenizer.batch_encode_plus([text], max_length=self.max_length, padding='max_length', truncation=True)
         encoded = {key:torch.LongTensor(value) for key, value in encoded.items()}
         with torch.no_grad():
             description = self.model(**encoded).last_hidden_state.swapaxes(1,2)
-        print(description.size())
+        print(text, description.size())
         return description
         
-new_input = 'This is a large table to be sold in London.'
+new_input = 'This is a large table to be sold at 100p in London.'
 
 dataset = TextProcessor(max_length=20)
 dataloader = torch.utils.data.DataLoader(dataset.__call__(new_input), batch_size=1)

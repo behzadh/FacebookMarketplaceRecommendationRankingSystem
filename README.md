@@ -261,11 +261,53 @@ Creating a pipline as above will increase the accuracy to 49%.
         def forward(self, x):
             return self.layers(x)
     ```
-    This model has reached an accurancy of 77% which is a very good result for this dataset. the accuracy for the training 
-    sample reached 84%% and no overfitting occured for our text calssification within the 5 epochs.
+    This model has reached an accurancy of 74% which is a very good result for this dataset. the accuracy for the training 
+    sample reached 84% and no overfitting occured within the 5 epochs.
 
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_tensorboard.png" width="600">
     <br />
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_loss.png" width="298">
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_accuracy.png" width="300">
 
+## Creating a Combined Model
+
+> Once we have the Vision and Text models we can combined them together by concating their last layers.
+
+- PyTorch Dataset:
+    - Same as the Image and Text Dataset we create a dataset to include both inforamaton. This PyTorch dataset 
+    will includ an embanding and an image tensors as features and the category of products as target.
+
+
+- Combine the two models:
+    - This will be a model that concatenates the layers of the image and text models.
+    
+    ```python
+    class CombinedModel(nn.Module):
+
+        '''
+        A combined model used for text and image classification together
+        '''
+
+        def __init__(self, num_classes=3) -> None:
+
+            super(CombinedModel, self).__init__()
+            resnet50 = torch.hub.load('NVIDIA/DeepLearningExamples:torchhub', 'nvidia_resnet50', pretrained=True)
+            out_features = resnet50.fc.out_features
+            self.image_classifier = nn.Sequential(resnet50, nn.Linear(out_features, 128)).to(device)
+            self.text_classifier = TextClassifier()
+            self.main = nn.Sequential(nn.Linear(192, num_classes))
+
+        def forward(self, image_features, text_features):
+            image_features = self.image_classifier(image_features)
+            text_features = self.text_classifier(text_features)
+            combined_features = torch.cat((image_features, text_features), 1)
+            combined_features = self.main(combined_features)
+            return combined_features
+    ```
+    This model has reached an accurancy of 74% which is a very good result for this dataset. the accuracy for the training 
+    sample reached 84% and no overfitting occured within the 5 epochs.
+
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_image_tensorboard.png" width="600">
+    <br />
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_image_loss.png" width="298">
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_image_accuracy.png" width="300">
