@@ -304,8 +304,42 @@ Creating a pipline as above will increase the accuracy to 49%.
             combined_features = self.main(combined_features)
             return combined_features
     ```
-    This model has reached an accurancy of 74% which is a very good result for this dataset. the accuracy for the training 
-    sample reached 84% and no overfitting occured within the 5 epochs.
+    The combine model which uses the both test and image information has reached an accurancy of 76% which is one of the 
+    best results so far at the AiCore. The accuracy for the training sample reached 95% within the 8 epochs. 
+
+    ```code
+    Epoch: 1
+    Training set: Average loss: 1.831565, Accuracy: 3394/8823 (38%)
+    Validation set: Average loss: 1.412253, Accuracy: 2037/3781 (54%)
+
+    Epoch: 2
+    Training set: Average loss: 1.145279, Accuracy: 5548/8823 (63%)
+    Validation set: Average loss: 1.189010, Accuracy: 2331/3781 (62%)
+
+    Epoch: 3
+    Training set: Average loss: 0.837704, Accuracy: 6487/8823 (74%)
+    Validation set: Average loss: 1.156728, Accuracy: 2428/3781 (64%)
+
+    Epoch: 4
+    Training set: Average loss: 0.617757, Accuracy: 7030/8823 (80%)
+    Validation set: Average loss: 1.003349, Accuracy: 2608/3781 (69%)
+
+    Epoch: 5
+    Training set: Average loss: 0.398511, Accuracy: 7695/8823 (87%)
+    Validation set: Average loss: 1.035803, Accuracy: 2674/3781 (71%)
+
+    Epoch: 6
+    Training set: Average loss: 0.288524, Accuracy: 7969/8823 (90%)
+    Validation set: Average loss: 1.272192, Accuracy: 2577/3781 (68%)
+
+    Epoch: 7
+    Training set: Average loss: 0.213483, Accuracy: 8230/8823 (93%)
+    Validation set: Average loss: 1.058057, Accuracy: 2811/3781 (74%)
+
+    Epoch: 8
+    Training set: Average loss: 0.158219, Accuracy: 8393/8823 (95%)
+    Validation set: Average loss: 1.047071, Accuracy: 2869/3781 (76%)
+    ```
 
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_image_tensorboard.png" width="600">
     <br />

@@ -4,7 +4,6 @@ import torch
 from transformers import BertTokenizer, BertModel
 import torchvision.transforms as transforms
 from PIL import Image
-from PIL import ImageFile
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import accuracy_score, confusion_matrix
@@ -28,6 +27,7 @@ class ImageTextDataset(torch.utils.data.Dataset):
         self.description = shuffled['product_description'].to_list()
         self.imgs = shuffled['id']
         self.num_classes = len(set(self.labels))
+        self.classes = list(set(shuffled['category_edited'])) #Used fpr plotting
         self.encoder = {y: x for (x, y) in enumerate(set(self.labels))}
         self.decoder = {x: y for (x, y) in enumerate(set(self.labels))}
         self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
@@ -100,7 +100,7 @@ class LoadTrainTestPlot():
         '''
         Loads the train and test image datasets
         '''
-        # Split into training (70% and testing (30%) datasets)
+        # Split into training datasets)
         test_size = int(self.test_to_train_ratio * len(dataset))
         train_size = len(dataset) - test_size
         

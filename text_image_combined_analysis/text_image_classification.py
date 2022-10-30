@@ -46,7 +46,7 @@ class CombinedModel(nn.Module):
         return combined_features
 
 dataset = ImageTextDataset(max_length=20)
-n_epochs = 5
+n_epochs = 8
 lr = 0.001
 n_classes = dataset.num_classes
 
