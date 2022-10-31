@@ -304,41 +304,41 @@ Creating a pipline as above will increase the accuracy to 49%.
             combined_features = self.main(combined_features)
             return combined_features
     ```
-    The combine model which uses the both test and image information has reached an accurancy of 76% which is one of the 
-    best results so far at the AiCore. The accuracy for the training sample reached 95% within the 8 epochs. 
+    The combine model which uses the both test and image information has reached an accurancy of 78% which is one of the 
+    best results so far at the AiCore. The accuracy for the training sample reached 97% within the 8 epochs. 
 
     ```code
     Epoch: 1
-    Training set: Average loss: 1.831565, Accuracy: 3394/8823 (38%)
-    Validation set: Average loss: 1.412253, Accuracy: 2037/3781 (54%)
+    Training set: Average loss: 1.714934, Accuracy: 3751/8823 (43%)
+    Validation set: Average loss: 1.301012, Accuracy: 2137/3781 (57%)
 
     Epoch: 2
-    Training set: Average loss: 1.145279, Accuracy: 5548/8823 (63%)
-    Validation set: Average loss: 1.189010, Accuracy: 2331/3781 (62%)
+    Training set: Average loss: 1.068653, Accuracy: 5727/8823 (65%)
+    Validation set: Average loss: 1.129872, Accuracy: 2394/3781 (63%)
 
     Epoch: 3
-    Training set: Average loss: 0.837704, Accuracy: 6487/8823 (74%)
-    Validation set: Average loss: 1.156728, Accuracy: 2428/3781 (64%)
+    Training set: Average loss: 0.765921, Accuracy: 6605/8823 (75%)
+    Validation set: Average loss: 1.019578, Accuracy: 2563/3781 (68%)
 
     Epoch: 4
-    Training set: Average loss: 0.617757, Accuracy: 7030/8823 (80%)
-    Validation set: Average loss: 1.003349, Accuracy: 2608/3781 (69%)
+    Training set: Average loss: 0.546157, Accuracy: 7284/8823 (83%)
+    Validation set: Average loss: 1.095542, Accuracy: 2612/3781 (69%)
 
     Epoch: 5
-    Training set: Average loss: 0.398511, Accuracy: 7695/8823 (87%)
-    Validation set: Average loss: 1.035803, Accuracy: 2674/3781 (71%)
+    Training set: Average loss: 0.411921, Accuracy: 7667/8823 (87%)
+    Validation set: Average loss: 0.963552, Accuracy: 2722/3781 (72%)
 
     Epoch: 6
-    Training set: Average loss: 0.288524, Accuracy: 7969/8823 (90%)
-    Validation set: Average loss: 1.272192, Accuracy: 2577/3781 (68%)
+    Training set: Average loss: 0.305380, Accuracy: 7955/8823 (90%)
+    Validation set: Average loss: 0.922950, Accuracy: 2855/3781 (76%)
 
     Epoch: 7
-    Training set: Average loss: 0.213483, Accuracy: 8230/8823 (93%)
-    Validation set: Average loss: 1.058057, Accuracy: 2811/3781 (74%)
+    Training set: Average loss: 0.212714, Accuracy: 8213/8823 (93%)
+    Validation set: Average loss: 0.974951, Accuracy: 2886/3781 (76%)
 
     Epoch: 8
-    Training set: Average loss: 0.158219, Accuracy: 8393/8823 (95%)
-    Validation set: Average loss: 1.047071, Accuracy: 2869/3781 (76%)
+    Training set: Average loss: 0.103855, Accuracy: 8544/8823 (97%)
+    Validation set: Average loss: 1.008297, Accuracy: 2935/3781 (78%)
     ```
 
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_image_tensorboard.png" width="600">
