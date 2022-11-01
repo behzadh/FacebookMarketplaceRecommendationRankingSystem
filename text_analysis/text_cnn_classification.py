@@ -1,4 +1,4 @@
-from pytorch_text_dataset import TextDataset, LoadTrainTestPlot
+from text_analysis.pytorch_text_dataset import TextDataset, LoadTrainTestPlot
 import torch
 import torch.nn as nn
 import pickle

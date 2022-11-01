@@ -55,7 +55,7 @@ def main ():
 
 if __name__ == "__main__":
     epoch_nums, training_loss, validation_loss = main()
-    # torch.save(model.state_dict(), './ml_models/resnet50.pt')
-    # with open('./ml_models/image_decoder.pkl', 'wb') as f:
-    #     pickle.dump(dataset.decoder, f)
+    torch.save(model.state_dict(), './ml_models/resnet50.pt')
+    with open('./ml_models/image_decoder.pkl', 'wb') as f:
+        pickle.dump(dataset.decoder, f)
     load_train.plot_acc(epoch_nums, training_loss, validation_loss, dataset, model, test_loader)

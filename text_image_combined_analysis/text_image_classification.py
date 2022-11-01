@@ -6,7 +6,7 @@ import pickle
 class TextClassifier(nn.Module):
     def __init__(self):
         super(TextClassifier, self).__init__()
-        self.main = nn.Sequential(nn.Conv1d(768, 256, kernel_size=3, stride=1, padding=1),
+        self.layers = nn.Sequential(nn.Conv1d(768, 256, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
             nn.MaxPool1d(kernel_size=2, stride=2),
             nn.Conv1d(256, 128, kernel_size=3, stride=1, padding=1),
@@ -20,7 +20,7 @@ class TextClassifier(nn.Module):
             nn.Flatten())
 
     def forward(self, inp):
-        x = self.main(inp)
+        x = self.layers(inp)
         return x
 
 class CombinedModel(nn.Module):
