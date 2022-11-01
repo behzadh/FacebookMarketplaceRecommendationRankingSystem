@@ -13,10 +13,10 @@ from pydantic import BaseModel
 from image_analysis.image_processor import ImageProcessor
 from text_analysis.text_processor import TextProcessor
 
-class CNN(nn.Module):
+class TextClassifier(nn.Module):
     def __init__(self, num_classes=3,
                  decoder: dict = None):
-        super(CNN, self).__init__()
+        super(TextClassifier, self).__init__()
         self.layers = nn.Sequential(
             nn.Conv1d(768, 256, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
@@ -83,9 +83,10 @@ class ImageClassifier(nn.Module):
             return self.decoder[int(torch.argmax(x, dim=1))]
 
 class TextClassifierCo(nn.Module):
-    def __init__(self):
-        super(TextClassifier, self).__init__()
-        self.layers = nn.Sequential(nn.Conv1d(768, 256, kernel_size=3, stride=1, padding=1),
+    def __init__(self, num_classes=3):
+        super(TextClassifierCo, self).__init__()
+        self.main = nn.Sequential(
+            nn.Conv1d(768, 256, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
             nn.MaxPool1d(kernel_size=2, stride=2),
             nn.Conv1d(256, 128, kernel_size=3, stride=1, padding=1),
@@ -96,10 +97,11 @@ class TextClassifierCo(nn.Module):
             nn.MaxPool1d(kernel_size=2, stride=2),
             nn.Conv1d(64, 32, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
-            nn.Flatten())
+            nn.Flatten()
+        )
 
     def forward(self, inp):
-        x = self.layers(inp)
+        x = self.main(inp)
         return x
 
 class CombinedModel(nn.Module):
@@ -141,35 +143,35 @@ class TextItem(BaseModel):
 
 try:
     text_processor = TextProcessor(max_length=20)
-    with open('text_decoder.pkl', 'rb') as f:
+    with open('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/text_decoder.pkl', 'rb') as f:
         text_decoder = pickle.load(f)
 
     n_classes = len(text_decoder)
-    txt_classifier = CNN(num_classes=n_classes, decoder=text_decoder)
+    txt_classifier = TextClassifier(num_classes=n_classes, decoder=text_decoder)
     txt_classifier.load_state_dict(torch.load('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/model_bert.pt', map_location='cpu'))
 except:
     raise OSError("No Text model found. Check that you have the decoder and the model in the correct location")
 
 try:
     image_processor = ImageProcessor()
-    with open('image_decoder.pkl', 'rb') as f:
+    with open('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/image_decoder.pkl', 'rb') as f:
         image_decoder = pickle.load(f)
 
     n_classes = len(image_decoder)
     img_classifier = ImageClassifier(num_classes=n_classes, decoder=image_decoder)
-    img_classifier.load_state_dict(torch.load('resnet50.pt', map_location='cpu'))
+    img_classifier.load_state_dict(torch.load('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/resnet50.pt', map_location='cpu'))
 except:
     raise OSError("No Image model found. Check that you have the encoder and the model in the correct location")
 
 try:
     text_processor = TextProcessor(max_length=20)
     image_processor = ImageProcessor()
-    with open('combined_decoder.pkl', 'rb') as f:
+    with open('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/combined_decoder.pkl', 'rb') as f:
         combined_decoder = pickle.load(f)
 
     n_classes = len(combined_decoder)
     combined = CombinedModel(num_classes=n_classes, decoder=combined_decoder)
-    combined.load_state_dict(torch.load('combined_model.pt', map_location='cpu'))
+    combined.load_state_dict(torch.load('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/combined_model.pt', map_location='cpu'))
 except:
     raise OSError("No Combined model found. Check that you have the encoder and the model in the correct location")
 
@@ -194,8 +196,8 @@ def healthcheck():
 
 @app.post('/predict/text')
 def predict_text(text: str = Form(...)):
-  
-    processed_txt = image_processor(text)
+    
+    processed_txt = text_processor(text)
     prediction = txt_classifier.predict(processed_txt)
     probs = txt_classifier.predict_proba(processed_txt)
     classes = txt_classifier.predict_classes(processed_txt)
@@ -221,7 +223,7 @@ def predict_image(image: UploadFile = File(...)):
 @app.post('/predict/combined')
 def predict_combined(image: UploadFile = File(...), text: str = Form(...)):
     print(text)
-    processed_txt = image_processor(text)
+    processed_txt = text_processor(text)
     img = Image.open(image.file)
     processed_img = image_processor(img)
     prediction = combined.predict(processed_img, processed_txt)
@@ -233,4 +235,4 @@ def predict_combined(image: UploadFile = File(...), text: str = Form(...)):
     return JSONResponse(status_code=200, content={'prediction': prediction.tolist(), 'probs': probs.tolist(), 'classes': classes})
     
 if __name__ == '__main__':
-  uvicorn.run("api:app", host="0.0.0.0", port=8080)
+    uvicorn.run("api:app", host="0.0.0.0", port=8080)
