@@ -12,6 +12,10 @@ import torch.nn as nn
 from pydantic import BaseModel
 from image_processor import ImageProcessor
 from text_processor import TextProcessor
+from transformers import logging
+logging.set_verbosity_error()
+import warnings
+warnings.simplefilter("ignore", UserWarning)
 
 class TextClassifier(nn.Module):
     def __init__(self, num_classes=3,
@@ -190,9 +194,9 @@ print("Starting server")
 
 @app.get('/healthcheck')
 def healthcheck():
-  msg = "API is up and running!"
-  
-  return {"message": msg}
+
+    msg = "API is up and running!"
+    return {"message": msg}
 
 @app.post('/predict/text')
 def predict_text(text: str = Form(...)):

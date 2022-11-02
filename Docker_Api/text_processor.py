@@ -2,6 +2,8 @@ from transformers import BertTokenizer
 from transformers import BertModel
 import torch
 import re
+from transformers import logging
+logging.set_verbosity_error()
 
 class TextProcessor:
     def __init__(self, max_length: int):
@@ -17,10 +19,10 @@ class TextProcessor:
         encoded = {key:torch.LongTensor(value) for key, value in encoded.items()}
         with torch.no_grad():
             description = self.model(**encoded).last_hidden_state.swapaxes(1,2)
-        print(text, description.size())
+       # print(text, description.size())
         return description
         
-new_input = 'This is a large table to be sold at 100p in London.'
+# new_input = 'This is a large table to be sold at 100p in London.'
 
-dataset = TextProcessor(max_length=20)
-dataloader = torch.utils.data.DataLoader(dataset.__call__(new_input), batch_size=1)
+# dataset = TextProcessor(max_length=20)
+# dataloader = torch.utils.data.DataLoader(dataset.__call__(new_input), batch_size=1)
