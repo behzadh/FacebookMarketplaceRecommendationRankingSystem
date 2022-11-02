@@ -18,7 +18,7 @@ class TextClassifier(nn.Module):
                  decoder: dict = None):
         super(TextClassifier, self).__init__()
         self.layers = nn.Sequential(
-            nn.Conv1d(768, 256, kernel_size=3, stride=1, padding=1),
+            nn.Conv1d(768, 256, kernel_size=3, stride=1, padding=1), 
             nn.ReLU(),
             nn.MaxPool1d(kernel_size=2, stride=2),
             nn.Conv1d(256, 128, kernel_size=3, stride=1, padding=1),
