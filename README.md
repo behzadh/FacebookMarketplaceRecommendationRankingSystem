@@ -343,5 +343,5 @@ Creating a pipline as above will increase the accuracy to 49%.
 
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_image_tensorboard.png" width="600">
     <br />
-    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_image_loss.png" width="298">
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_image_loss.png" width="300">
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_image_accuracy.png" width="300">

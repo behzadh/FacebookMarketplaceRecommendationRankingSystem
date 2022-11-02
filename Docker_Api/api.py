@@ -10,15 +10,15 @@ from fastapi import Form
 import torch
 import torch.nn as nn
 from pydantic import BaseModel
-from image_analysis.image_processor import ImageProcessor
-from text_analysis.text_processor import TextProcessor
+from image_processor import ImageProcessor
+from text_processor import TextProcessor
 
 class TextClassifier(nn.Module):
     def __init__(self, num_classes=3,
                  decoder: dict = None):
         super(TextClassifier, self).__init__()
         self.layers = nn.Sequential(
-            nn.Conv1d(768, 256, kernel_size=3, stride=1, padding=1), 
+            nn.Conv1d(768, 256, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
             nn.MaxPool1d(kernel_size=2, stride=2),
             nn.Conv1d(256, 128, kernel_size=3, stride=1, padding=1),
@@ -143,35 +143,35 @@ class TextItem(BaseModel):
 
 try:
     text_processor = TextProcessor(max_length=20)
-    with open('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/text_decoder.pkl', 'rb') as f:
+    with open('./text_decoder.pkl', 'rb') as f:
         text_decoder = pickle.load(f)
 
     n_classes = len(text_decoder)
     txt_classifier = TextClassifier(num_classes=n_classes, decoder=text_decoder)
-    txt_classifier.load_state_dict(torch.load('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/model_bert.pt', map_location='cpu'))
+    txt_classifier.load_state_dict(torch.load('./model_bert.pt', map_location='cpu'))
 except:
     raise OSError("No Text model found. Check that you have the decoder and the model in the correct location")
 
 try:
     image_processor = ImageProcessor()
-    with open('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/image_decoder.pkl', 'rb') as f:
+    with open('./image_decoder.pkl', 'rb') as f:
         image_decoder = pickle.load(f)
 
     n_classes = len(image_decoder)
     img_classifier = ImageClassifier(num_classes=n_classes, decoder=image_decoder)
-    img_classifier.load_state_dict(torch.load('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/resnet50.pt', map_location='cpu'))
+    img_classifier.load_state_dict(torch.load('./resnet50.pt', map_location='cpu'))
 except:
     raise OSError("No Image model found. Check that you have the encoder and the model in the correct location")
 
 try:
     text_processor = TextProcessor(max_length=20)
     image_processor = ImageProcessor()
-    with open('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/combined_decoder.pkl', 'rb') as f:
+    with open('./combined_decoder.pkl', 'rb') as f:
         combined_decoder = pickle.load(f)
 
     n_classes = len(combined_decoder)
     combined = CombinedModel(num_classes=n_classes, decoder=combined_decoder)
-    combined.load_state_dict(torch.load('/Users/behzad/AiCore/Facebook_Marketplace_RRS/ml_models/combined_model.pt', map_location='cpu'))
+    combined.load_state_dict(torch.load('./combined_model.pt', map_location='cpu'))
 except:
     raise OSError("No Combined model found. Check that you have the encoder and the model in the correct location")
 
