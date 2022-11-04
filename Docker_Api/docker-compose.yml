@@ -1,12 +1,11 @@
 version : '3.4'
 services:
     model_serving_api:
-      build: .
+      #build: .
+      image: bhossein/facebook_marketplace_rrs
       ports: 
-        - 8080:8080
+        - 8081:8080
       restart: always
-      environment:
-        - BUCKET_NAME=${BUCKET_NAME}
       network_mode: host
       volumes: 
-        - ~/app:/app
+        - /Users/behzad/AiCore/Facebook_Marketplace_RRS/Docker_Api:/app
