@@ -1,6 +1,6 @@
 # Facebook Marketplace RRC (Recommendation Ranking System)
 
-> Facebook Marketplace Search Ranking is a projrct, in which we will develop and train a multimodal model that accepts images 
+> Facebook Marketplace Search Ranking is a project, in which we will develop and train a multimodal model that accepts images 
 and text. The output of the model generates embedding vectors that are helpful to make recommendations to buyers using their 
 demographic information. 
 
@@ -9,23 +9,23 @@ demographic information.
 > This project has two types of tabular and image datasets.
 
 - Cleaning tabular dataset:
-    - Product information are stored in 'Products.csv' file. The produucts details includs 'index', 'id', 'product_name', 'category', 'product_description',
+    - Product information is stored in the 'Products.csv' file. The products details include 'index', 'id', 'product_name', 'category', 'product_description',
        'price', 'location'. 
         - id: is a unique product id
-        - product_name: stores three informaton, product name, location and, Gumtree (which is a neme of trading website in the UK). The location has a sparate
-        column and the Gumtree does not add any value to the product name, there for this variable has been ruduced to have only the product name.
-        - category: mainly stores two info, catagory of the products and extra details regarding the product cotegory. This variable also has been defided to 
+        - product_name: stores three pieces of information, product name, location and, Gumtree (which is the name of a trading website in the UK). The location has a separate
+        column and word Gumtree do not add any value to the product name, there for this variable has been reduced to have only the product name.
+        - category: mainly stores two pieces of info, the category of the products and extra details regarding the product category. This variable also has been defined to 
         two sections.
-        - product_description: includs the description for each product.
-        - price: which has around 285 null values. However since we do not need the price value for our project we keep them for our analysis for now
+        - product_description: include the description for each product.
+        - price: which has around 285 null values. However, since we do not need the price value for our project we keep them for our analysis for now
         - location: stores the location of products
 
-- Claining image data sets:
-    - We have 12668 images for Facebook Marketing RRS project which all come with different sizes. Around 90.6% of the images have pixel size 
-    of greater than 512, ~9.2% have pixel ranges between 256 and 512 and, only ~0.2% of the images have less than 256 pixels.
+- Cleaning image data sets:
+    - We have 12668 images for Facebook Marketing RRS project which all come in different sizes. Around 90.6% of the images have a pixel size 
+    greater than 512, ~9.2% have pixel ranges between 256 and 512 and, only ~0.2% of the images have less than 256 pixels.
 
-    - In order to clean our image datset we need to first resize the images with the final size of 64 x 64 pixels to reduce the computing time and have a unique shape. The following function
-    will be used for the reszing them:
+    - To clean our image datset we need to first resize the images with the final size of 64 x 64 pixels to reduce the computing time and have 
+    a unique shape. The following function will be used for the resizing them:
     ```python
     def resize_image(self, final_size, im):
         
@@ -41,13 +41,13 @@ demographic information.
         return new_im
     ```
 
-## predict the price of the product
+## Price Prediction
 
 > We will create a simple regression model to predict the price of the products base on a tabular dataset.
 
-- We use the features from our cleaned dataset suuch as product name, product description, and location to predict the price of the product.
+- We use the features from our cleaned dataset such as product name, product description, and location, to predict the price of each product.
 
-- For this task it's necessary to apply TF-IDF (Term Frequency Inverse Document Frequency) to the text data to assign a weight to each word in the text.
+- For this task, it's necessary to apply TF-IDF (Term Frequency Inverse Document Frequency) to the text data to assign a weight to each word within the text.
 
 - First, we build a simple linear regression model to predict the price of the products.
 ```python
@@ -69,9 +69,9 @@ def lr_clf(self):
 ```
 
 As shown above, after loading data, the code will vectorize the text information and joins all text columns after vectorizing. Then, the LinearRegression method 
-from sk-learn is called to to predict the price of each product. The score of this model was around 42%
+from sk-learn is called, to predict the price of each product. The score of this model was around 42%
 
-- In order to improve the accuracy one can create a Pipeline to perform the Linear Regression model.
+- To improve the accuracy one can create a Pipeline to perform the Linear Regression model.
 ```python
 def pipeline_lr_clf(self):
 
@@ -98,15 +98,15 @@ def pipeline_lr_clf(self):
     pipeline.fit(X_train, y_train)
     print('Score: ', pipeline.score(X_test, y_test))
 ```
-Creating a pipline as above will increase the accuracy to 49%.
+Creating a pipeline as above will increase the accuracy to 49%.
 
-## Predicts the category of each product
+## Prediction of Different Categories
 
 > We will create a simple classification model with the image dataset we cleaned previously to predict the category of each product.
 
 - To predict the category of each product from its image we need to do the following steps:
     - clean images and resize them to 64 x 64 pixels
-    - change the color images to gray images to simplfy image learning.
+    - change the colour images to grey images to simplify image learning.
     ```code
     img = np.mean(im, axis=2) # convert color image to gray
     ```
@@ -118,8 +118,8 @@ Creating a pipline as above will increase the accuracy to 49%.
     ```code
     y = (pd.get_dummies(shuffled['category_edited'])).values
     ```
-    We have sguffled the dataset to not bais the learning.
-    - build a SVC model to predict the category of the products after scaling the image arrays
+    We have shuffled the dataset to not bias the learning.
+    - build an SVC model to predict the category of the products after scaling the image arrays
     ```python
     def svc_model(self):
 
@@ -145,16 +145,16 @@ Creating a pipline as above will increase the accuracy to 49%.
     ```
     This model only produces an accuracy of ~13% which will be drastically increased with the usage of a CNN model.
 
-## Creating Vision Model
+## Vision Model
 
-> In this section we will train a PyTorch CNN model to classify the category of products based on their images.
+> In this section, we will train a PyTorch CNN model to classify the category of products based on their images.
 
 - PyTorch Dataset:
     - To create a PyTorch dataset we can simply use the 'torch.utils.data.Dataset' module. The idea is to create a PyTorch dataset 
-    which includs an image tensor as features and the category of products as target.
+    which includes an image tensor as a feature and the category of products as a target.
 
 - Build Convolutional Neural Network:
-    - A CNN model with two hidden layers designed for the image classification. 
+    - A CNN model with two hidden layers designed for image classification. 
     
     ```python
     class CNN(nn.Module):
@@ -182,15 +182,15 @@ Creating a pipline as above will increase the accuracy to 49%.
         def forward(self, x):
             return self.layers(x)
     ```
-    This model has reached an accurancy of 23-24% which is an excepted accurancy based on our dataset. It's around twice better 
-    than the previous model.
+    This model has reached an accuracy of 23-24%, which is an excepted accuracy based on our dataset. It's around twice better 
+    then the previous model.
 
 - Transfer Learning:
-    - Can we even do better? Can we use more pictures to improve the accurancy? Where can find the new pictures? The answer
-    of these questions is 'yes' we can use pre-trained models that's been trained by others off the shelf. In this project, 
-    we use transfer learning to fine tune RESNET-50 to model a CNN that can classify the images using the dataset created 
-    previousely.
-    We just need to replace the final linear layer of the model with another linear layer whose output size is the same as 
+    - Can we even do better? Can we use more pictures to improve the accuracy? Where can we find new pictures? The answer
+   is 'yes' we can use pre-trained models that have been trained by others off the shelf. In this project, 
+    we use transfer learning to fine-tune RESNET-50 to model a CNN that can classify the images using the same dataset created 
+    previously.
+    We only need to replace the final linear layer of the model with another linear layer whose output size is the same as 
     the number of our categories.
     ```python
     class ResNet50(nn.Module):
@@ -210,7 +210,7 @@ Creating a pipline as above will increase the accuracy to 49%.
         def forward(self, x):
             return self.layers(x)
     ```
-    Using pre-trained resnet50 model increased the accuracy to around 35% for the validation and the accuracy for the training 
+    Using the pre-trained resnet50 model increased the accuracy to around 35% for the validation and the accuracy for the training 
     sample reached 65% accepting an overfit for our model, based on the available data for this project.
 
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/image_tensorboard.png" width="600">
@@ -218,19 +218,19 @@ Creating a pipline as above will increase the accuracy to 49%.
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/image_loss.png" width="298">
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/image_accuracy.png" width="300">
 
-## Creating Text Model
+## Text Model
 
-> In this section we will train a PyTorch CNN model to classify the category of products based on their text discription.
+> In this section, we will train a PyTorch CNN model to classify the category of products based on their text description.
 
 - PyTorch Dataset:
-    - Same as the Image Dataset we use the 'torch.utils.data.Dataset' module. This PyTorch dataset 
-    will includ an embanding tensor as features and the category of products as target.
+    - Same as the Image Dataset, we use the 'torch.utils.data.Dataset' module. This PyTorch dataset 
+    will include an embedding tensor as a feature and the category of products as the target.
 
     - Before embedding the raw text data is cleaned to drop unnecessary information for the training model.
 
 - Build Convolutional Neural Network:
-    - In this stage our dataset is very similar to the image dataset. We just need to use a 1d (Conv1d) CNN model 
-    instead of a 2d (Conv2d) model that we used for the image classification. 
+    - In this stage, our dataset is very similar to the image dataset. We just need to use a 1d (Conv1d) CNN model 
+    instead of the 2d (Conv2d) model we used for the image classification. 
     
     ```python
     class CNN(nn.Module):
@@ -261,21 +261,21 @@ Creating a pipline as above will increase the accuracy to 49%.
         def forward(self, x):
             return self.layers(x)
     ```
-    This model has reached an accurancy of 74% which is a very good result for this dataset. the accuracy for the training 
-    sample reached 84% and no overfitting occured within the 5 epochs.
+    This model has reached an accuracy of 74%, which is a very good result for this dataset. the accuracy of the training 
+    sample reached 84%, and no overfitting occurred within the five epochs.
 
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_tensorboard.png" width="600">
     <br />
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_loss.png" width="298">
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_accuracy.png" width="300">
 
-## Creating a Combined Model
+## Combined Model
 
-> Once we have the Vision and Text models we can combined them together by concating their last layers.
+> Once we have the Vision and Text models, we can combine them by concating their last layers.
 
 - PyTorch Dataset:
-    - Same as the Image and Text Dataset we create a dataset to include both inforamaton. This PyTorch dataset 
-    will includ an embanding and an image tensors as features and the category of products as target.
+    - Same as the Image and Text Dataset we create a dataset to include both pieces of information. This PyTorch dataset 
+    will include embedding and image tensors as features and the category of products as the target.
 
 
 - Combine the two models:
@@ -304,8 +304,8 @@ Creating a pipline as above will increase the accuracy to 49%.
             combined_features = self.main(combined_features)
             return combined_features
     ```
-    The combine model which uses the both test and image information has reached an accurancy of 78% which is one of the 
-    best results so far at the AiCore. The accuracy for the training sample reached 97% within the 8 epochs. 
+    The combined model, which uses both test and image information has reached an accuracy of 78%, which so far is one of the 
+    best results at the AiCore. The accuracy for the training sample reached 97% within the eight epochs. 
 
     ```code
     Epoch: 1
@@ -345,3 +345,36 @@ Creating a pipline as above will increase the accuracy to 49%.
     <br />
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_image_loss.png" width="300">
     <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/text_image_accuracy.png" width="300">
+
+## Deploy Model on AWS Server:
+
+> Once both vision and text models are combined, we can deploy our model on a server. In this section, we will
+discuss the FastApi used for deploying our model on an AWS EC2 instance.
+
+- API (Application Programming Interface):
+    - Application programming interfaces are software development and innovation by enabling 
+    applications to exchange data and functionality.
+    - API, enables companies to open up their applications’ data and functionality to external 
+    third-party developers and business partners, or to departments within their companies.
+    - In other words, APIs sit between an application and the web server, acting as an intermediary 
+    layer that processes data transfer between systems.
+
+- FastAPIs:
+    - In this project, we used FastAPI to create three endpoints to predict image, text and combined image and text data.
+    - FastAPI is a modern, high-performance web framework for building APIs with Python based on standard type hints.
+    - We developed our API with all the models and training weights for each model in the api.py file.
+    - Then, we containerized our API to deploy it on an EC2 instance.
+
+- Results:
+    - Now that our API has been deployed, we can send some requests to all three endpoints with the relevant data and test them to 
+    return predictions and probabilities. 
+
+    - Our API looks like the following with three endpoints:
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/Api_1.png" width="600">
+        <br />
+    - We can test it by inserting some data, like a text data as an example:
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/Api_2.png" width="600">
+        <br />
+    - And, it correctly predicts its category as 'Phones, Mobile Phones & Telecoms':
+    <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/Api_3.png" width="600">
+        <br />
