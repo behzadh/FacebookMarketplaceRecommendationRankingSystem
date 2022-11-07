@@ -88,3 +88,7 @@ class FbMarketingPricePrediction:
     def main(self):
         #self.lr_clf()
         self.pipeline_lr_clf()
+
+if __name__ == '__main__':
+    lr_cls = FbMarketingPricePrediction() 
+    lr_cls.main()

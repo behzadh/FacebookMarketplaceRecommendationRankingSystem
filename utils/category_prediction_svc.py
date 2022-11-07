@@ -68,3 +68,7 @@ class FbMarketingCategoryPrediction:
 
     def main(self):
         self.svc_model()
+
+if __name__ == '__main__':
+    cls = FbMarketingCategoryPrediction() 
+    cls.main()
