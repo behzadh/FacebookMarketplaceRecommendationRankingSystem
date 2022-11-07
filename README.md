@@ -370,11 +370,14 @@ discuss the FastApi used for deploying our model on an AWS EC2 instance.
     return predictions and probabilities. 
 
     - Our API looks like the following with three endpoints:
+    
         <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/Api_1.png" width="600">
             <br />
     - We can test it by inserting some data, like a text data as an example:
+
         <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/Api_2.png" width="600">
             <br />
     - And, it correctly predicts its category as 'Phones, Mobile Phones & Telecoms':
+
         <img src="https://github.com/behzadh/Facebook_Marketplace_RRS/blob/main/plots/Api_3.png" width="600">
             <br />
